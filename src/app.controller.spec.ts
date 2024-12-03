@@ -4,19 +4,36 @@ import { AppService } from './app.service';
 
 describe('AppController', () => {
   let appController: AppController;
+  let appService: AppService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        {
+          provide: AppService,
+          useValue: {
+            getInitialMessage: jest.fn().mockReturnValue({
+              message: 'Fullstack Challenge 🏅 - Dictionary',
+            }),
+          },
+        },
+      ],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = module.get<AppController>(AppController);
+    appService = module.get<AppService>(AppService);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('Initial Messagem API', () => {
+    it('should return an object with message: "Fullstack Challenge 🏅 - Dictionary"', () => {
+      const result = appController.getInitialMessage();
+
+      expect(result).toStrictEqual({
+        message: 'Fullstack Challenge 🏅 - Dictionary',
+      });
+
+      expect(appService.getInitialMessage).toHaveBeenCalledTimes(1);
     });
   });
 });
