@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
+export interface IInitialMessage {
+  message: string;
+}
+
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getInitialMessage(): IInitialMessage {
+    return {
+      message: 'Fullstack Challenge 🏅 - Dictionary',
+    };
   }
 }
